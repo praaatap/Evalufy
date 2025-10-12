@@ -143,7 +143,7 @@ const App: React.FC = () => {
           >
             {/* LOGIN BUTTON (New One) */}
             <Link
-              href="/auth"
+              href="/auth?action=signin"
               className="login-btn group inline-flex items-center justify-center text-white font-bold text-lg py-4 px-10 rounded-lg"
             >
               Login
@@ -151,7 +151,7 @@ const App: React.FC = () => {
 
             {/* START EXAM BUTTON (Original One) */}
             <Link
-              href="/aws_saa_test"
+              href="/browse-exams"
               className="start-btn group inline-flex items-center justify-center text-white font-bold text-lg py-4 px-10 rounded-lg"
             >
               Start Free Practice Test
@@ -169,5 +169,7 @@ const App: React.FC = () => {
     </>
   );
 };
+
+export const dynamic = 'force-static';
 
 export default App;
