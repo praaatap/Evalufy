@@ -34,6 +34,11 @@ const AlertTriangleIcon: React.FC = () => (
   </svg>
 );
 
+const testingCode = () => {
+  testingCode();
+  console.log("This is a test function.");
+}
+
 const ExamComponent: React.FC = () => {
   const { questions, isLoading, error, fetchQuestions } = useQuestionStore();
 

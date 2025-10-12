@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+@layer base {
+    body {
+        font-family: 'Inter', sans-serif;
+        -webkit-tap-highlight-color: transparent;
+        background-color: #050505;
+        /* Subtle dot grid background */
+        background-image: radial-gradient(circle at 1px 1px, #2a2a2a 1px, transparent 0);
+        background-size: 2rem 2rem;
+        color: #e5e7eb;
+    }
+}
+
+@layer utilities {
+    /* Animation for elements fading in and moving up */
+    @keyframes fade-in-up {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fade-in-up {
+        animation: fade-in-up 0.6s ease-out forwards;
+        opacity: 0;
+    }
+
+    /* Gradient definitions */
+    .gradient-text {
+        background: linear-gradient(90deg, #f9973e, #f76b1c);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-fill-color: transparent;
+    }
+    
+    .brand-gradient {
+         background: linear-gradient(90deg, #f9973e, #f76b1c);
+    }
+
+    /* Start Button styles */
+    .start-btn {
+        background: linear-gradient(90deg, #f9973e, #f76b1c);
+        box-shadow: 0 4px 30px 0 rgba(252, 127, 43, 0.3);
+        transition: all 0.3s ease-in-out;
+    }
+    .start-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 40px 0 rgba(252, 127, 43, 0.4);
+    }
+
+    /* New Feature Card styles */
+    .feature-card-wrapper {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+        transition: background 0.3s ease;
+    }
+    .feature-card-wrapper:hover {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+    }
+    .feature-card {
+        background-color: rgba(10, 10, 10, 0.5); /* Semi-transparent dark background */
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px); /* For Safari */
+        transform: translateZ(0); /* Promotes to a new layer for better performance */
+    }
+}
