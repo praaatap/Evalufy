@@ -4,19 +4,22 @@ import React from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { FcGoogle } from 'react-icons/fc';
 
-// --- Reusable Icon Component ---
 const UserIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-[#f76b1c]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
   </svg>
 );
 
+const updateChanegs = () => console.log(`
+  working
+  `)
+
 export default function AuthPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const action = searchParams.get('action') || 'login';
   const isLogin = action === 'login';
-
+  updateChanegs();
   return (
     <>
       <style>{`
