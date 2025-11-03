@@ -1,7 +1,8 @@
 'use client';
 import React, { useState, useEffect, Suspense } from 'react';
+import { signIn, useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
-// Your existing icon components remain the same...
 const UserIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-[#f76b1c]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -9,27 +10,45 @@ const UserIcon = () => (
 );
 
 const GoogleIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="22" height="22" viewBox="0 0 48 48">
-    <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path>
-    <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"></path>
-    <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.222,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"></path>
-    <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.574l6.19,5.238C39.901,35.636,44,30.138,44,24C44,22.659,43.862,21.35,43.611,20.083z"></path>
+  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 48 48">
+    <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8
+      c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12
+      c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657
+      C34.046,6.053,29.268,4,24,4
+      C12.955,4,4,12.955,4,24
+      c0,11.045,8.955,20,20,20
+      c11.045,0,20-8.955,20-20
+      C44,22.659,43.862,21.35,43.611,20.083z"></path>
+    <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819
+      C14.655,15.108,18.961,12,24,12
+      c3.059,0,5.842,1.154,7.961,3.039
+      l5.657-5.657
+      C34.046,6.053,29.268,4,24,4
+      C16.318,4,9.656,8.337,6.306,14.691z"></path>
+    <path fill="#4CAF50" d="M24,44
+      c5.166,0,9.86-1.977,13.409-5.192
+      l-6.19-5.238
+      C29.211,35.091,26.715,36,24,36
+      c-5.222,0-9.619-3.317-11.283-7.946
+      l-6.522,5.025
+      C9.505,39.556,16.227,44,24,44z"></path>
+    <path fill="#1976D2" d="M43.611,20.083H42V20H24v8
+      h11.303c-0.792,2.237-2.231,4.166-4.087,5.574
+      l6.19,5.238
+      C39.901,35.636,44,30.138,44,24
+      C44,22.659,43.862,21.35,43.611,20.083z"></path>
   </svg>
 );
 
-// Create a component that uses useSearchParams
 function AuthContent() {
   const [action, setAction] = useState('login');
-  
+  const { data: session, status } = useSession();
+
   useEffect(() => {
-    // Read URL params on initial load
     const params = new URLSearchParams(window.location.search);
     const actionParam = params.get('action');
-    if (actionParam) {
-      setAction(actionParam);
-    }
+    if (actionParam) setAction(actionParam);
 
-    // Listen for browser back/forward navigation
     const handlePopState = () => {
       const params = new URLSearchParams(window.location.search);
       setAction(params.get('action') || 'login');
@@ -46,6 +65,31 @@ function AuthContent() {
     window.history.pushState({}, '', url);
     setAction(newAction);
   };
+
+  // ✅ If user is logged in, show profile
+  // ✅ If user is logged in, show profile
+    // ⏳ Show loader while session is being checked
+  if (status === "loading") {
+    return (
+      <div className="h-screen flex items-center justify-center text-white text-lg">
+        <div className="flex flex-col items-center">
+          <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+          Checking authentication...
+        </div>
+      </div>
+    );
+  }
+
+  // ✅ If user is logged in, redirect to dashboard (optional)
+  if (status === "authenticated") {
+    return (
+      <div className="h-screen flex items-center justify-center text-white text-lg">
+        Redirecting to dashboard...
+      </div>
+    );
+  }
+
+
 
   return (
     <div className="h-screen flex items-center justify-center p-4 overflow-hidden">
@@ -87,7 +131,7 @@ function AuthContent() {
             />
           </div>
 
-          {/* Confirm Password (Only Signup) */}
+          {/* Confirm Password */}
           {!isLogin && (
             <div>
               <label className="block text-sm mb-1 text-gray-300">Confirm Password</label>
@@ -114,9 +158,12 @@ function AuthContent() {
             <span className="w-1/3 border-b border-gray-700" />
           </div>
 
-          {/* Google Login */}
+          {/* ✅ Google Login Button */}
           <button
             type="button"
+            onClick={() => signIn('google',{
+              callbackUrl:'/introduction'
+            })}
             className="w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/20 rounded-xl py-3 transition-all text-white"
           >
             <GoogleIcon />
@@ -155,8 +202,15 @@ function AuthContent() {
   );
 }
 
-// Main AuthPage component with Suspense
 export default function AuthPage() {
+  const router =  useRouter();
+  const { data: session, status } = useSession();
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.push("/dashboard");
+    }
+  }, [status, router]);
   return (
     <>
       <style>{`
@@ -186,18 +240,8 @@ export default function AuthPage() {
           transform: scale(1.05);
           box-shadow: 0 8px 30px 0 rgba(252, 127, 43, 0.4);
         }
-        .gradient-text {
-          background: linear-gradient(90deg, #f9973e, #f76b1c);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-        }
       `}</style>
-      
-      <Suspense fallback={
-        <div className="h-screen flex items-center justify-center">
-          <div className="text-white text-lg">Loading...</div>
-        </div>
-      }>
+      <Suspense fallback={<div className="h-screen flex items-center justify-center text-white text-lg">Loading...</div>}>
         <AuthContent />
       </Suspense>
     </>
